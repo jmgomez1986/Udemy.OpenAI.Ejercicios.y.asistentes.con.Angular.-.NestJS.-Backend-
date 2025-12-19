@@ -3,8 +3,10 @@ import path from 'path';
 import * as fs from 'fs';
 import OpenAI from 'openai';
 import { GoogleGenAI } from '@google/genai';
-import { AudioToTextDto } from './dtos/audioToText.dto';
 import {
+  AudioToTextDto,
+  ImageGenerationDto,
+  ImageVariationDto,
   OrthographyDto,
   ProsConsDiscusserDto,
   TextToAudioDto,
@@ -12,6 +14,8 @@ import {
 } from './dtos';
 import {
   audioToTextUseCase,
+  imageGenerationUseCase,
+  imageVariationUseCase,
   orthographyUseCase,
   prosConsDicusserStreamUseCase,
   prosConsDicusserUseCase,
@@ -47,14 +51,11 @@ export class GptService {
   }
 
   textToAudioGetter(fileId: string) {
-    console.log('fileId: ', fileId);
     const filePath = path.resolve(
       __dirname,
       '../../generated/audios',
       `${fileId}.mp3`,
     );
-
-    console.log('filePath: ', filePath);
 
     const wasFound = fs.existsSync(filePath);
 
@@ -72,5 +73,23 @@ export class GptService {
       audioFile,
       prompt: audioToTextDto.prompt,
     });
+  }
+
+  async imageGeneration(imageGenerationDto: ImageGenerationDto) {
+    return await imageGenerationUseCase(this.openIA, { ...imageGenerationDto });
+  }
+
+  imageGenerationGetter(fileName: string) {
+    const filePath = path.resolve('./', './generated/images', `${fileName}`);
+    const wasFound = fs.existsSync(filePath);
+
+    if (!wasFound)
+      throw new NotFoundException(`File with name ${fileName} not found`);
+
+    return filePath;
+  }
+
+  async imageVariation(imageVariationDto: ImageVariationDto) {
+    return await imageVariationUseCase(this.openIA, { ...imageVariationDto });
   }
 }

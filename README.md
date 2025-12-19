@@ -52,3 +52,4 @@ Este curso está pensado para realizar una integración de Angular hacia un back
 - Seccion 10: Frontend - Texto a audio
 - Seccion 11: Backend - Audio a texto
 - Seccion 12: Frontend - Audio a texto
+- Seccopn 13: Backend - Generacion de imagenes

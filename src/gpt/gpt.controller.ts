@@ -18,6 +18,8 @@ import { diskStorage } from 'multer';
 import { GptService } from './gpt.service';
 import {
   AudioToTextDto,
+  ImageGenerationDto,
+  ImageVariationDto,
   OrthographyDto,
   ProsConsDiscusserDto,
   TextToAudioDto,
@@ -86,8 +88,7 @@ export class GptController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './generated/uploads',
-        filename: (req: any, file: Express.Multer.File, callback: any) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        filename: (req, file: Express.Multer.File, callback) => {
           const fileExtension = file.originalname.split('.').pop();
           const filename = `${new Date().getTime()}.${fileExtension}`;
           callback(null, filename);
@@ -103,6 +104,10 @@ export class GptController {
             maxSize: 1000 * 1024 * 5,
             message: 'File is bigger than 5 mb ',
           }),
+          new FileTypeValidator({
+            fileType: 'audio/*',
+            skipMagicNumbersValidation: true,
+          }),
         ],
       }),
     )
@@ -110,5 +115,26 @@ export class GptController {
     @Body() audioToTextDto: AudioToTextDto,
   ) {
     return this.gptService.audioToText(file, audioToTextDto);
+  }
+
+  @Post('image-generation')
+  async imageGeneration(@Body() imageGenerationDto: ImageGenerationDto) {
+    return await this.gptService.imageGeneration({ ...imageGenerationDto });
+  }
+
+  @Get('image-generation/:fileName')
+  async imageGenerationGetter(
+    @Res() res: Response,
+    @Param('fileName') fileName: string,
+  ) {
+    const filePath = this.gptService.imageGenerationGetter(fileName);
+    // res.header('Content-Type', 'image/png');
+    res.status(HttpStatus.OK);
+    res.sendFile(filePath);
+  }
+
+  @Post('image-variation')
+  async imageVariation(@Body() imageVariationDto: ImageVariationDto) {
+    return await this.gptService.imageVariation({ ...imageVariationDto });
   }
 }
