@@ -4,23 +4,24 @@ import * as fs from 'fs';
 import sharp from 'sharp';
 
 export const downloadImageAsPng = async (
-  imageUrl: string,
+  url: string,
   fullPath: boolean = false,
-): Promise<string> => {
-  const response = await fetch(imageUrl);
+) => {
+  const response = await fetch(url);
 
-  if (!response) {
-    throw new InternalServerErrorException('Download image failed');
+  if (!response.ok) {
+    throw new InternalServerErrorException('Download image was not possible');
   }
 
   const folderPath = path.resolve('./', './generated/images/');
-
   fs.mkdirSync(folderPath, { recursive: true });
 
   const imageNamePng = `${new Date().getTime()}.png`;
   const buffer = Buffer.from(await response.arrayBuffer());
-  // fs.writeFileSync(`${folderPath}/${imageName}`, buffer);
+
+  // fs.writeFileSync( `${ folderPath }/${ imageNamePng }`, buffer );
   const completePath = path.join(folderPath, imageNamePng);
+
   await sharp(buffer).png().ensureAlpha().toFile(completePath);
 
   return fullPath ? completePath : imageNamePng;

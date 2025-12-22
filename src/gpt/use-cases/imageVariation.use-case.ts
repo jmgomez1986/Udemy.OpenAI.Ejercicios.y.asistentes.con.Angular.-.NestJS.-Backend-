@@ -7,9 +7,8 @@ export const imageVariationUseCase = async (
   openIA: OpenAI,
   options: ImageVariationDto,
 ) => {
-  const { prompt, base64Image } = options;
-  console.log({ prompt, base64Image });
-  const pngIagePath = await downloadImageAsPng(base64Image, true);
+  const { baseImage } = options;
+  const pngIagePath = await downloadImageAsPng(baseImage, true);
   const response = await openIA.images.createVariation({
     // Default Model 'dall-e-2' for variations
     model: 'dall-e-2',
