@@ -54,3 +54,4 @@ Este curso está pensado para realizar una integración de Angular hacia un back
 - Seccion 12: Frontend - Audio a texto
 - Seccion 13: Backend - Generacion de imagenes
 - Seccion 14: Frontend - Generacion y edición de imágenes
+- Seccion 15: Backend - Asistentes de OpenAI

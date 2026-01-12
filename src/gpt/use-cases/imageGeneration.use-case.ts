@@ -41,14 +41,14 @@ export const imageGenerationUseCase = async (
     }
   }
 
-  console.log('Original Image: ', originalImage);
+  // console.log('Original Image: ', originalImage);
   // console.log('Mask Image: ', maskImage);
 
   const pngImagePath = await downloadImageAsPng(originalImage, true);
   const pngMaskPath = await downloadBase64ImageAsPng(maskImage, true);
 
   console.log('PNG Image Path: ', pngImagePath);
-  // console.log('PNG Mask Path: ', pngMaskPath);
+  console.log('PNG Mask Path: ', pngMaskPath);
 
   const response = await openIA.images.edit({
     model: 'dall-e-2',
